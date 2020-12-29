@@ -11,10 +11,10 @@
 #include "../requirements/requirements.hpp"
 #include "../conflicts/conflicts.hpp"
 
-enum Argument_Type {
-    string,         // passed as Argument:value
-    boolean,        // passed as Argument+ or Argument-
-    simple          // passed as Argument without additional value
+enum class Argument_Type {
+    string = 0,         // passed as Argument:value
+    boolean = 1,        // passed as Argument+ or Argument-
+    simple = 2          // passed as Argument without additional value
 };
 
 class Argument
@@ -64,7 +64,7 @@ public:
     void set_default_value(const std::string& default_value);
 
 protected:
-    Argument_Type m_type{ simple };
+    Argument_Type m_type{ Argument_Type::simple };
     std::string m_default_value{};
 
     virtual std::ostream& print(std::ostream& os, const std::string& indent = "") const override;

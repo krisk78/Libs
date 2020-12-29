@@ -9,7 +9,7 @@
 std::string AType_toStr(Argument_Type arg)
 {
     static const std::array<const std::string, 3> AType_Label{ "string", "boolean", "simple" };
-    return AType_Label[arg];
+    return AType_Label[(int)arg];
 }
 
 Argument::Argument(const std::string& name)
@@ -72,7 +72,7 @@ std::ostream& Named_Arg::print(std::ostream& os, const std::string& indent) cons
     os << indent << "<named>" << std::endl;
     Argument::print(os, indent + "\t");
     os << indent << "\t<switch_char>" << switch_char << "</switch_char>" << std::endl;
-    os << indent << "\t<type>" << m_type << "</type>" << std::endl;
+    os << indent << "\t<type>" << (int)m_type << "</type>" << std::endl;
     os << indent << "\t<default_value>" << m_default_value << "</default_value>" << std::endl;
     os << indent << "</named>" << std::endl;
     return os;
@@ -95,14 +95,14 @@ void Named_Arg::set_required(const bool required)
 
 void Named_Arg::set_type(Argument_Type type)
 {
-    assert((type != simple || type == simple && m_default_value.empty()) && "Type simple can't be set for arguments with a default value.");
+    assert((type != Argument_Type::simple || type == Argument_Type::simple && m_default_value.empty()) && "Type simple can't be set for arguments with a default value.");
     m_type = type;
 }
 
 void Named_Arg::set_default_value(const std::string& default_value)
 {
     assert((default_value.empty() || !default_value.empty() && !m_required) && "A default value can't be set for a required argument.");
-    assert((default_value.empty() || !default_value.empty() && m_type != simple) && "A default value can't be set for an argument of type simple.");
+    assert((default_value.empty() || !default_value.empty() && m_type != Argument_Type::simple) && "A default value can't be set for an argument of type simple.");
     m_default_value = default_value;
 }
 
@@ -443,7 +443,7 @@ std::string Usage::set_parameters(int argc, char* argv[])
     std::vector<bool> set_args(m_argsorder.size(), false);
     bool many{ false };
     size_t unnamed{ 0 };
-    for (size_t i = 1; i < argc; i++)
+    for (size_t i = 1; i < (size_t)argc; i++)
     {
         std::string p = argv[i];
         if (p.empty())
@@ -497,13 +497,13 @@ std::string Usage::set_parameters(int argc, char* argv[])
         }
         if (p.empty())
             return get_message(SYNTAX_ERROR, i, argv[i], program_name.c_str());
-        Argument_Type type_p{ simple };
+        Argument_Type type_p{ Argument_Type::simple };
         auto colon = p.find(':');
         if (colon != std::string::npos)
         {
             if (colon < p.size() - 1)
                 value = p.substr(colon + 1, p.size() - colon) + value;
-            type_p = string;
+            type_p = Argument_Type::string;
             p.erase(colon, p.length() - colon);
         }
         else
@@ -511,7 +511,7 @@ std::string Usage::set_parameters(int argc, char* argv[])
             auto sgn = p[p.length() - 1];
             if (sgn == '+' || sgn == '-')
             {
-                type_p = boolean;
+                type_p = Argument_Type::boolean;
                 p.erase(p.length() - 1);
                 if (!value.empty())
                     return get_message(SYNTAX_ERROR, i, argv[i], program_name.c_str());
