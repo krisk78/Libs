@@ -16,6 +16,7 @@ All of the scripts I previously wrote performed the same sequence of tasks:
   - in certain cases doing some stuff on global files
   - batch processing each file passed through the command line
   - eventually doing some final stuff on global files
+  
 I provide the library ConsoleAppFW to implement this framework. It also use the Usage library to implement arguments checks and help.
 
 Finally, the Utils library includes few functions to perform basic tasks that are not covered by the STL.
