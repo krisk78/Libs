@@ -15,8 +15,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "conflicts", "conflicts\conf
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "conflicts_test", "conflicts_test\conflicts_test.vcxproj", "{5A5CB87A-110C-463A-9267-FC9B4949A4EC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XMLUtils", "XMLUtils\XMLUtils.vcxproj", "{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "usage", "usage\usage.vcxproj", "{5C997DF0-749A-41C8-91D4-5C1584853375}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "usage_test", "usage_test\usage_test.vcxproj", "{837FEF1F-93CB-4D08-A6D0-E54679CA6822}"
@@ -81,14 +79,6 @@ Global
 		{5A5CB87A-110C-463A-9267-FC9B4949A4EC}.Release|x64.Build.0 = Release|x64
 		{5A5CB87A-110C-463A-9267-FC9B4949A4EC}.Release|x86.ActiveCfg = Release|Win32
 		{5A5CB87A-110C-463A-9267-FC9B4949A4EC}.Release|x86.Build.0 = Release|Win32
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Debug|x64.ActiveCfg = Debug|x64
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Debug|x64.Build.0 = Debug|x64
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Debug|x86.ActiveCfg = Debug|Win32
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Debug|x86.Build.0 = Debug|Win32
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Release|x64.ActiveCfg = Release|x64
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Release|x64.Build.0 = Release|x64
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Release|x86.ActiveCfg = Release|Win32
-		{27ECF099-4EEB-4E6E-B90C-7980BB685F8B}.Release|x86.Build.0 = Release|Win32
 		{5C997DF0-749A-41C8-91D4-5C1584853375}.Debug|x64.ActiveCfg = Debug|x64
 		{5C997DF0-749A-41C8-91D4-5C1584853375}.Debug|x64.Build.0 = Debug|x64
 		{5C997DF0-749A-41C8-91D4-5C1584853375}.Debug|x86.ActiveCfg = Debug|Win32
