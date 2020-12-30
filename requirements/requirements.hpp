@@ -12,20 +12,18 @@
 #include <unordered_map>
 #include <vector>
 
-/*! \class Requirements
-    \brief Requirements is a class that handles pairs of objects for which the first object depends on the second object.
+/*! \brief Requirements is a class that handles pairs of objects for which the first object depends on the second object.
 
     Pairs are ensured to be unique.
     By default reflexivity is not allowed (objects that depend on each other) but it can be activated at construction.
     Because it does not have any sense, the reflexivity status can not be changed after instantiation.
 */
-
 template <typename T>
 class Requirements
 {
 public:
     Requirements() = delete;
-    /*! \brief Set the reflexive status to true to allow mutual dependencies.
+    /*! \brief Constructor. Set the reflexive status to true to allow mutual dependencies.
     */
     Requirements(const bool reflexive = false) noexcept
         : m_reflexive(reflexive) {};
@@ -161,6 +159,8 @@ void Requirements<T>::remove_all(const T& object)
 }
 
 /*! \brief Returns true if the dependent object directly requires the requirement object.
+* 
+*   \sa Requirements< T >::requires()
 */
 template <typename T>
 bool Requirements<T>::exists(const T& dependent, const T& requirement) const noexcept
@@ -196,6 +196,8 @@ bool Requirements<T>::_requires(const T& dependent, const T& requirement, const 
 }
 
 /*! \brief Returns true if the dependent object requires, directly or indirectly, the requirement object.
+
+*   \sa Requirements< T >::exists()
 */
 template <typename T>
 bool Requirements<T>::requires(const T& dependent, const T& requirement) const
@@ -417,8 +419,8 @@ std::unordered_multimap<T, T> Requirements<T>::get() const
 
 /*! \brief Sets dependencies from the given list. The list of dependencies is first cleared.
 *   Controls are performed and an assertion occurs if rules are broken.
-*   \sa Requirements<T>::add()
-*   Requirements<T>::merge()
+*   \sa Requirements< T >::add()
+    \sa Requirements< T >::merge()
 */
 template <typename T>
 void Requirements<T>::set(const std::unordered_multimap<T, T>& requirements)
@@ -429,7 +431,8 @@ void Requirements<T>::set(const std::unordered_multimap<T, T>& requirements)
 
 /*! \brief Adds dependencies from the given list.
 *   Controls are performed and an assertion occurs if rules are broken.
-*   \sa Requirements<T>::add()
+*   \sa Requirements< T >::add()
+    \sa Requirements< T >::set()
 */
 template <typename T>
 void Requirements<T>::merge(const std::unordered_multimap<T, T>& requirements)
