@@ -2,29 +2,47 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
+/*! \file requirements.hpp
+*	\brief Implements the template class Requirements.
+*   \author Christophe COUAILLET
+*/
+
 #include <cassert>
 #include <cstddef>
 #include <unordered_map>
 #include <vector>
 
-// Requirements is a class that handles pairs of objects for which the first object depends on the second object.
-// Pairs are ensured to be unique.
-// By default reflexivity is not allowed (objects that depend on each other) but it can be activated at construction.
-// Because it does not have any sense, the status of reflexivity can not be changed after instantiation.
+/*! \class Requirements
+    \brief Requirements is a class that handles pairs of objects for which the first object depends on the second object.
+
+    Pairs are ensured to be unique.
+    By default reflexivity is not allowed (objects that depend on each other) but it can be activated at construction.
+    Because it does not have any sense, the reflexivity status can not be changed after instantiation.
+*/
 
 template <typename T>
 class Requirements
 {
 public:
     Requirements() = delete;
+    /*! \brief Set the reflexive status to true to allow mutual dependencies.
+    */
     Requirements(const bool reflexive = false) noexcept
         : m_reflexive(reflexive) {};
 
+    /*! \brief Returns the reflexive status.
+    */
     bool reflexive() const noexcept { return m_reflexive; }
 
+    /*! \brief Clears all dependencies.
+    */
     void clear() noexcept { m_requirements.clear(); }
 
+    /*! \brief Returns true if no dependencies are set.
+    */
     bool empty() const noexcept { return m_requirements.empty(); }
+    /*! \brief Returns the number of dependencies.
+    */
     size_t size() const noexcept { return m_requirements.size(); }
 
     void add(const T& dependent, const T& requirement);
@@ -34,7 +52,6 @@ public:
     void remove_all(const T& object);
     bool exists(const T& dependent, const T& requirement) const noexcept;               // check direct requirement
     bool requires(const T& dependent, const T& requirement) const;                      // check in requirements chains
-    bool depends(const T& requirement, const T& dependent) const;                       // check in dependents chains
     bool has_requirements(const T& dependent) const noexcept;
     bool has_dependents(const T& requirement) const noexcept;
     std::vector<T> requirements(const T& dependent) const;                                  // lists direct requirements of dependent
@@ -57,6 +74,12 @@ private:
 
 // Implementation of templates classes and functions
 
+/*! \brief Add a relation where dependent depends on requirement.
+*   An assertion occurs if:
+*   \li dependent and requirements are the same object,
+*   \li the relation already exists,
+*   \li the opposite relation already exists while reflexivity is not allowed.
+*/
 template <typename T>
 void Requirements<T>::add(const T& dependent, const T& requirement)
 {
@@ -69,6 +92,10 @@ void Requirements<T>::add(const T& dependent, const T& requirement)
     m_requirements.insert({ dependent, requirement });
 }
 
+/*! \brief Removes an existing relation where dependent depends on requirement.
+*   An assertion occurs if the relation does not exist.
+*   \warning This function does not remove the opposite relation.
+*/
 template <typename T>
 void Requirements<T>::remove(const T& dependent, const T& requirement)
 {
@@ -88,6 +115,10 @@ void Requirements<T>::remove(const T& dependent, const T& requirement)
     assert(found && "Requirement does not exist.");
 }
 
+/*! \brief Removes all relations involving the object as a dependent.
+*   An assertion occurs if no requirement has been set for this object.
+*   Relations involving the object as a requirement are left.
+*/
 template <typename T>
 void Requirements<T>::remove_dependent(const T& dependent)
 {
@@ -96,6 +127,10 @@ void Requirements<T>::remove_dependent(const T& dependent)
     m_requirements.erase(range.first, range.second);
 }
 
+/*! \brief Removes all relations involving the object as a requirement.
+*   An assertion occurs if no dependent has been set for this object.
+*   Relations involving the object as a dependent are left.
+*/
 template <typename T>
 void Requirements<T>::remove_requirement(const T& requirement)
 {
@@ -114,6 +149,8 @@ void Requirements<T>::remove_requirement(const T& requirement)
     assert(found && "No requirement exists for this argument.");
 }
 
+/*! \brief Removes all existing relations involving the object as a dependent or a requirement.
+*/
 template <typename T>
 void Requirements<T>::remove_all(const T& object)
 {
@@ -123,6 +160,8 @@ void Requirements<T>::remove_all(const T& object)
         remove_requirement(object);
 }
 
+/*! \brief Returns true if the dependent object directly requires the requirement object.
+*/
 template <typename T>
 bool Requirements<T>::exists(const T& dependent, const T& requirement) const noexcept
 {
@@ -156,36 +195,16 @@ bool Requirements<T>::_requires(const T& dependent, const T& requirement, const 
     return result;
 }
 
+/*! \brief Returns true if the dependent object requires, directly or indirectly, the requirement object.
+*/
 template <typename T>
 bool Requirements<T>::requires(const T& dependent, const T& requirement) const
 {
     return _requires(dependent, requirement, nullptr);
 }
 
-template <typename T>
-bool Requirements<T>::_depends(const T& requirement, const T& dependent, const T* prev) const
-{
-    bool result = exists(dependent, requirement);
-    if (!result && has_dependents(requirement))
-    {
-        auto deps = dependents(requirement);
-        auto dep = deps.begin();
-        while (!result && dep != deps.end())
-        {
-            if (prev == nullptr || !(*dep == *prev))
-                result = _depends(*dep, dependent, &requirement);
-            ++dep;
-        }
-    }
-    return result;
-}
-
-template <typename T>
-bool Requirements<T>::depends(const T& requirement, const T& dependent) const
-{
-    return _depends(requirement, dependent, nullptr);
-}
-
+/*! \brief Returns true if the object depends on at least one other object.
+*/
 template <typename T>
 bool Requirements<T>::has_requirements(const T& dependent) const noexcept
 {
@@ -193,6 +212,8 @@ bool Requirements<T>::has_requirements(const T& dependent) const noexcept
     return itr != m_requirements.end();
 }
 
+/*! \brief Returns true if the object is required for at least one other object.
+*/
 template <typename T>
 bool Requirements<T>::has_dependents(const T& requirement) const noexcept
 {
@@ -207,6 +228,8 @@ bool Requirements<T>::has_dependents(const T& requirement) const noexcept
     return found;
 }
 
+/*! \brief Returns the list of the objects on which the object directly depends.
+*/
 template <typename T>
 std::vector<T> Requirements<T>::requirements(const T& dependent) const
 {
@@ -221,6 +244,8 @@ std::vector<T> Requirements<T>::requirements(const T& dependent) const
     return result;
 }
 
+/*! \brief Returns the list of the objects that directly requires the object.
+*/
 template <typename T>
 std::vector<T> Requirements<T>::dependents(const T& requirement) const
 {
@@ -235,6 +260,9 @@ std::vector<T> Requirements<T>::dependents(const T& requirement) const
     return result;
 }
 
+/*! \brief Returns the list of the branches of objects on which the object depends, directly or indirectly.
+*   An assertion occurs if the object has no direct requirement.
+*/
 template <typename T>
 std::vector<std::vector<T>> Requirements<T>::all_requirements(const T& dependent) const
 {
@@ -270,6 +298,9 @@ std::vector<std::vector<T>> Requirements<T>::all_requirements(const T& dependent
     return result;
 }
 
+/*! \brief Returns the list of the branches of objects that requires the object, directly or indirectly.
+*   An assertion occurs if the objects has no direct dependent.
+*/
 template <typename T>
 std::vector<std::vector<T>> Requirements<T>::all_dependencies(const T& requirement) const
 {
@@ -305,6 +336,9 @@ std::vector<std::vector<T>> Requirements<T>::all_dependencies(const T& requireme
     return result;
 }
 
+/*! \brief Returns the list of all branches of dependencies, from dependents to requirements.
+*   \param without_duplicates If true only objects that have no dependents are considered as first element of a branch.
+*/
 template <typename T>
 std::vector<std::vector<T>> Requirements<T>::all_requirements(bool without_duplicates) const
 {
@@ -334,6 +368,9 @@ std::vector<std::vector<T>> Requirements<T>::all_requirements(bool without_dupli
     return result;
 }
 
+/*! \brief Returns the list of all branches of dependencies, from requirements to dependents.
+*   \param without_duplicates If true only objects that not depends on another object are considered as first element of a branch.
+*/
 template <typename T>
 std::vector<std::vector<T>> Requirements<T>::all_dependencies(bool without_duplicates) const
 {
@@ -363,6 +400,8 @@ std::vector<std::vector<T>> Requirements<T>::all_dependencies(bool without_dupli
     return result;
 }
 
+/*! \brief Returns the list of all pairs of objects (dependent, requirement).
+*/
 template <typename T>
 std::unordered_multimap<T, T> Requirements<T>::get() const
 {
@@ -376,6 +415,11 @@ std::unordered_multimap<T, T> Requirements<T>::get() const
     return result;
 }
 
+/*! \brief Sets dependencies from the given list. The list of dependencies is first cleared.
+*   Controls are performed and an assertion occurs if rules are broken.
+*   \sa Requirements<T>::add()
+*   Requirements<T>::merge()
+*/
 template <typename T>
 void Requirements<T>::set(const std::unordered_multimap<T, T>& requirements)
 {
@@ -383,6 +427,10 @@ void Requirements<T>::set(const std::unordered_multimap<T, T>& requirements)
     merge(requirements);
 }
 
+/*! \brief Adds dependencies from the given list.
+*   Controls are performed and an assertion occurs if rules are broken.
+*   \sa Requirements<T>::add()
+*/
 template <typename T>
 void Requirements<T>::merge(const std::unordered_multimap<T, T>& requirements)
 {
