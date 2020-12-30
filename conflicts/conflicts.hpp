@@ -13,7 +13,7 @@
 * 
     Create a relationship with an object itself is not allowed.
     Doubles are not allowed, each relationship is unique.
-    The class conflicts supports two distinct modes at instantiation:
+    The class Conflicts supports two distinct modes at instantiation:
     \li without cascading: only direct relationships between objects are considered.
     \li with cascading: conflicts between objects are evaluated by recursing relationships (if an object A is in conflict with an object B that is in conflict with an object C, then A is in conflict with C).
 
