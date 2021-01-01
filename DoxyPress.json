@@ -168,7 +168,7 @@
         "optimize-fortran": false,
         "optimize-java": false,
         "optimize-python": false,
-        "output-dir": "H:/Users/kris/Devs/Projects/Libs/doc",
+        "output-dir": "doc",
         "output-language": "English",
         "strip-from-inc-path": [
             ""

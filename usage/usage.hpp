@@ -2,6 +2,11 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
+/*! \file usage.hpp
+*	\brief Implements the classes Argument_Type, Argument, Named_Arg, Unnamed_Arg and Usage.
+*   \author Christophe COUAILLET
+*/
+
 #include <iosfwd>
 #include <memory>
 #include <string>
@@ -11,35 +16,58 @@
 #include "../requirements/requirements.hpp"
 #include "../conflicts/conflicts.hpp"
 
+/*! \brief Defines the types of Named_Arg objects:
+*   \li string: passed as Argument:value,
+*   \li boolean: passed as Argument+ or Argument-,
+*   \li simple: passed as Argument without additional value.
+*/
 enum class Argument_Type {
     string = 0,         // passed as Argument:value
     boolean = 1,        // passed as Argument+ or Argument-
     simple = 2          // passed as Argument without additional value
 };
 
+/*! \brief A pure virtual class that defines the base for Named_Arg and Unnamed_Arg. */
 class Argument
 {
 public:
+    /*! \brief Returns true for Named_Arg objects, false for Unnamed_Arg objects. */
     virtual bool named() const noexcept = 0;
+    /*! \brief Returns the name of the argument that is set at instantiation. */
     std::string name() const noexcept;
+    /*! \brief Sets or gets the help string displayed in the usage output. */
     std::string helpstring{};
+    /*! \brief Returns true if the argument is obligatory.
+    *   \sa Argument::set_required()
+    */
     bool required() const noexcept { return m_required; }
+    /*! \brief list of values passed for the argument. Unnamed_Arg objects can contain many values. */
     std::vector<std::string> value{};
 
     Argument() = delete;
+    /*! \brief Default constructor that sets the name of the argument. */
     Argument(const std::string& name);
+    /*! \brief Copy constructor. */
     Argument(const Argument& argument);
+    /*! \brief Move constructor. */
     Argument(const Argument* argument);
 
+    /*! \brief Sets if the argument is obligatory or not. */
     virtual void set_required(const bool required) = 0;
 
+    /*! \brief This override returns in the output stream os the xml definition of the argument. */
     friend std::ostream& operator<<(std::ostream& os, const Argument& argument);
     // used to return the xml definition of the Argument
 
 protected:
+    /*! \brief Sets or gets the name of the argument. */
     std::string m_name{};
+    /*! \brief Sets or gets the obligatory status of the argument, false by default. */
     bool m_required{ false };
 
+    /*! \brief Prints in the output stream the help string of the argument.
+        \param indent Optional string inserted before the argument help.
+    */
     virtual std::ostream& print(std::ostream& os, const std::string& indent = "") const;
 };
 

@@ -2,7 +2,7 @@
 
 #include "..\requirements\requirements.hpp"
 
-enum NiceGuys
+enum class NiceGuys
 {
     Kyle,
     John,
@@ -10,16 +10,19 @@ enum NiceGuys
     Jack,
     Joe
 };
+
+using ng = NiceGuys;
+
 class RequirementsTest : public ::testing::Test
 {
 protected:
     void SetUp() override
     {
-        req1.add(Kyle, Jack);   // Kyle requires Jack
-        req1.add(Jack, John);   // Jack requires John
-        req1.add(Joe, John);    // Joe requires John
-        req2.add(Harry, Joe);   // Harry requires Joe
-        req2.add(Joe, Harry);   // Joe requires Harry (only allowed if reflexive)
+        req1.add(ng::Kyle, ng::Jack);   // Kyle requires Jack
+        req1.add(ng::Jack, ng::John);   // Jack requires John
+        req1.add(ng::Joe, ng::John);    // Joe requires John
+        req2.add(ng::Harry, ng::Joe);   // Harry requires Joe
+        req2.add(ng::Joe, ng::Harry);   // Joe requires Harry (only allowed if reflexive)
     }
 
     // void TearDown() override {}
@@ -46,52 +49,52 @@ TEST_F(RequirementsTest, Initialization)
 
 TEST_F(RequirementsDeathTest, Assertion_If_Non_Reflexive)
 {
-    EXPECT_DEATH(req1.add(Jack, Kyle), "");     // only allowed if reflexive but req1 is not reflexive
+    EXPECT_DEATH(req1.add(ng::Jack, ng::Kyle), "");     // only allowed if reflexive but req1 is not reflexive
 }
 
 TEST_F(RequirementsTest, Exists)
 {
-    EXPECT_TRUE(req1.exists(Kyle, Jack) && req1.exists(Jack, John) && req1.exists(Joe, John));
-    EXPECT_TRUE(req2.exists(Harry, Joe) && req2.exists(Joe, Harry));
+    EXPECT_TRUE(req1.exists(ng::Kyle, ng::Jack) && req1.exists(ng::Jack, ng::John) && req1.exists(ng::Joe, ng::John));
+    EXPECT_TRUE(req2.exists(ng::Harry, ng::Joe) && req2.exists(ng::Joe, ng::Harry));
 }
 
 TEST_F(RequirementsTest, Has_Requirements)
 {
-    EXPECT_TRUE(req1.has_requirements(Kyle));
-    EXPECT_TRUE(req1.has_requirements(Jack));
-    EXPECT_TRUE(req1.has_requirements(Joe));
-    EXPECT_FALSE(req1.has_requirements(John));
-    EXPECT_FALSE(req1.has_requirements(Harry));
-    EXPECT_TRUE(req2.has_requirements(Harry));
-    EXPECT_TRUE(req2.has_requirements(Joe));
-    EXPECT_FALSE(req2.has_requirements(Kyle));
-    EXPECT_FALSE(req2.has_requirements(Jack));
-    EXPECT_FALSE(req2.has_requirements(John));
+    EXPECT_TRUE(req1.has_requirements(ng::Kyle));
+    EXPECT_TRUE(req1.has_requirements(ng::Jack));
+    EXPECT_TRUE(req1.has_requirements(ng::Joe));
+    EXPECT_FALSE(req1.has_requirements(ng::John));
+    EXPECT_FALSE(req1.has_requirements(ng::Harry));
+    EXPECT_TRUE(req2.has_requirements(ng::Harry));
+    EXPECT_TRUE(req2.has_requirements(ng::Joe));
+    EXPECT_FALSE(req2.has_requirements(ng::Kyle));
+    EXPECT_FALSE(req2.has_requirements(ng::Jack));
+    EXPECT_FALSE(req2.has_requirements(ng::John));
 }
 
 TEST_F(RequirementsTest, Has_Dependents)
 {
-    EXPECT_TRUE(req1.has_dependents(Jack));
-    EXPECT_TRUE(req1.has_dependents(John));
-    EXPECT_FALSE(req1.has_dependents(Kyle));
-    EXPECT_FALSE(req1.has_dependents(Harry));
-    EXPECT_FALSE(req1.has_dependents(Joe));
-    EXPECT_TRUE(req2.has_dependents(Harry));
-    EXPECT_TRUE(req2.has_dependents(Joe));
-    EXPECT_FALSE(req2.has_dependents(Kyle));
-    EXPECT_FALSE(req2.has_dependents(Jack));
-    EXPECT_FALSE(req2.has_dependents(John));
+    EXPECT_TRUE(req1.has_dependents(ng::Jack));
+    EXPECT_TRUE(req1.has_dependents(ng::John));
+    EXPECT_FALSE(req1.has_dependents(ng::Kyle));
+    EXPECT_FALSE(req1.has_dependents(ng::Harry));
+    EXPECT_FALSE(req1.has_dependents(ng::Joe));
+    EXPECT_TRUE(req2.has_dependents(ng::Harry));
+    EXPECT_TRUE(req2.has_dependents(ng::Joe));
+    EXPECT_FALSE(req2.has_dependents(ng::Kyle));
+    EXPECT_FALSE(req2.has_dependents(ng::Jack));
+    EXPECT_FALSE(req2.has_dependents(ng::John));
 }
 
 TEST_F(RequirementsTest, Dependents)
 {
-    auto deps = req1.dependents(John);
+    auto deps = req1.dependents(ng::John);
     ASSERT_EQ(deps.size(), 2);
-    EXPECT_TRUE(deps[0] == Jack || deps[0] == Joe);
-    if (deps[0] == Jack)
-        EXPECT_EQ(deps[1], Joe);
+    EXPECT_TRUE(deps[0] == ng::Jack || deps[0] == ng::Joe);
+    if (deps[0] == ng::Jack)
+        EXPECT_EQ(deps[1], ng::Joe);
     else
-        EXPECT_EQ(deps[1], Jack);
+        EXPECT_EQ(deps[1], ng::Jack);
 }
 
 TEST_F(RequirementsTest, All_Requirements)
@@ -99,7 +102,7 @@ TEST_F(RequirementsTest, All_Requirements)
     auto dep_paths = req1.all_requirements(true);
     EXPECT_EQ(dep_paths.size(), 2);
     for (auto path : dep_paths)
-        EXPECT_EQ(path.back(), John);
+        EXPECT_EQ(path.back(), ng::John);
 }
 
 TEST_F(RequirementsTest, All_Dependencies)
@@ -107,30 +110,22 @@ TEST_F(RequirementsTest, All_Dependencies)
     auto req_paths = req1.all_dependencies(true);
     EXPECT_EQ(req_paths.size(), 2);
     for (auto path : req_paths)
-        EXPECT_TRUE(path.back() == Joe || path.back() == Kyle);
+        EXPECT_TRUE(path.back() == ng::Joe || path.back() == ng::Kyle);
 }
 
 TEST_F(RequirementsTest, Requires)
 {
-    EXPECT_TRUE(req1.requires(Kyle, John));
-    EXPECT_FALSE(req1.requires(Jack, Joe));
-    EXPECT_TRUE(req2.requires(Harry, Joe));
-    EXPECT_TRUE(req2.requires(Joe, Harry));
-}
-
-TEST_F(RequirementsTest, Depends)
-{
-    EXPECT_TRUE(req1.depends(John, Kyle));
-    EXPECT_FALSE(req1.depends(Jack, Joe));
-    EXPECT_TRUE(req2.depends(Harry, Joe));
-    EXPECT_TRUE(req2.depends(Joe, Harry));
+    EXPECT_TRUE(req1.requires(ng::Kyle, ng::John));
+    EXPECT_FALSE(req1.requires(ng::Jack, ng::Joe));
+    EXPECT_TRUE(req2.requires(ng::Harry, ng::Joe));
+    EXPECT_TRUE(req2.requires(ng::Joe, ng::Harry));
 }
 
 TEST_F(RequirementsTest, Remove_All)
 {
-    req1.remove_all(Jack);
-    EXPECT_FALSE(req1.has_requirements(Kyle));
-    EXPECT_FALSE(req1.exists(Jack, John));
+    req1.remove_all(ng::Jack);
+    EXPECT_FALSE(req1.has_requirements(ng::Kyle));
+    EXPECT_FALSE(req1.exists(ng::Jack, ng::John));
     EXPECT_EQ(req1.size(), 1);
 }
 
