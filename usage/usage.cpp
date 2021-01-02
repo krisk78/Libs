@@ -1,5 +1,7 @@
-// usage.cpp : Defines the functions for the static library.
-//
+/*! \file usage.cpp
+    \brief Defines the functions for the static library.
+    \author Christophe COUAILLET
+*/
 
 #include "pch.h"
 
