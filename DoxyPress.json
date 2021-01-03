@@ -133,6 +133,7 @@
         "uml-limit-num-fields": 10,
         "uml-look": false
     },
+    "doxyPress-location": "",
     "doxypress-format": 1,
     "doxypress-updated": "2018-Jun-30",
     "external": {
@@ -241,6 +242,8 @@
         "warn-undoc-param": true,
         "warnings": true
     },
+    "opened-files": [
+    ],
     "output-chm": {
         "binary-toc": false,
         "chm-file": "",
@@ -381,6 +384,8 @@
         "xml-output": "xml",
         "xml-program-listing": true
     },
+    "pos-x": 0,
+    "pos-y": 0,
     "preprocessor": {
         "enable-preprocessing": false,
         "expand-as-defined": [
@@ -406,6 +411,8 @@
         "project-name": "Libs",
         "project-version": "v1.0-alpha"
     },
+    "size-height": 849,
+    "size-width": 1426,
     "source": {
         "inline-source": false,
         "ref-by-relation": false,

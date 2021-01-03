@@ -9,7 +9,7 @@
 
 #include "../requirements/requirements.hpp"
 
-/*! \brief Class conflicts implements a specialized container that lists a bidirectional conflict relationships between objects.
+/*! \brief Class conflicts implements a specialized container that lists the bidirectional conflict relationships between objects.
 * 
     Create a relationship with an object itself is not allowed.
     Doubles are not allowed, each relationship is unique.

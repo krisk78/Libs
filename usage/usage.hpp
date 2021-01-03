@@ -27,7 +27,7 @@ enum class Argument_Type {
     simple = 2          // passed as Argument without additional value
 };
 
-/*! \brief An abstract class that defines the base for Named_Arg (named argument) and Unnamed_Arg (unnamed argument). */
+/*! \brief An abstract class that defines the bases of classes Named_Arg (named argument) and Unnamed_Arg (unnamed argument). */
 class Argument
 {
 public:
