@@ -200,9 +200,9 @@ public:
     void remove_all() noexcept;
     /*! \brief Removes all arguments from the list and clears the description, syntax and usage help strings. */
     void clear() noexcept;
-    /*! \brief Returns a pointer to the argument. */
+    /*! \brief Returns a pointer to the argument or NULL if the given name does not exist. */
     Argument* get_Argument(const std::string& name);
-    /*! \brief Returns the list of arguments. */
+    /*! \brief Returns a list of pointers to arguments. */
     std::vector<Argument*> get_Arguments();
     /*! \brief Returns the whole list of pairs of argument names and values. */
     std::unordered_map<std::string, std::vector<std::string>> get_values() const;       // return couples name, values - to use after call of set_parameters

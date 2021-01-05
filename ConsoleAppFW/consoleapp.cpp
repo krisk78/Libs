@@ -33,10 +33,7 @@ std::string ConsoleApp::Arguments(int argc, char* argv[])
 		return msg;				// m_argschecked is not set to true because in this case there is nothing to run
 	}
 	if (msg.empty())
-	{
-		m_values = us.get_values();
 		msg = CheckArguments();
-	}
 	if (!msg.empty())
 	{
 #ifdef _WIN32
@@ -50,15 +47,15 @@ std::string ConsoleApp::Arguments(int argc, char* argv[])
 	return msg;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> ConsoleApp::values() const noexcept
+std::unordered_map<std::string, std::vector<std::string>> ConsoleApp::values() const
 {
-	assert(!m_values.empty() && "Attempt to get values before processing command line arguments.");
-	return m_values;
+	assert(m_argschecked && "Attempt to get values before parsing command line arguments.");
+	return us.get_values();
 }
 
-std::vector<std::string> ConsoleApp::values(const std::string& name)
+std::vector<std::string> ConsoleApp::values(const std::string& name) const
 {
-	assert(!m_values.empty() && "Attempt to get values before processing command line arguments.");
+	assert(m_argschecked && "Attempt to get values before parsing command line arguments.");
 	return us.get_values(name);
 }
 
@@ -80,10 +77,10 @@ int ConsoleApp::Run()
 int ConsoleApp::ByFile()
 {
 	int nbfiles{ 0 };
-	auto itr = m_values.find("file");
-	if (itr == m_values.end())
+	auto files = us.get_Argument("file");
+	if (files == NULL || !files->required() && files->value.empty())
 		return nbfiles;
-	for (auto value : (*itr).second)
+	for (auto value : files->value)
 	{
 		auto files = dir(value);
 		for (auto file : files)

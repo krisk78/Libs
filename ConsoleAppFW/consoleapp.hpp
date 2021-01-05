@@ -55,13 +55,13 @@ public:
 	* 
 	*	An assertion occurs if the member function Arguments has not been called first.
 	*/
-	std::unordered_map<std::string, std::vector<std::string>> values() const noexcept;
+	std::unordered_map<std::string, std::vector<std::string>> values() const;
 																		// Returns the values read for each argument
 	/*! \brief Returns the list of values of the given argument.
 	* 
 	*	An assertion occurs if the argument name is unknown or if the function Arguments has not been called first.
 	*/
-	std::vector<std::string> values(const std::string& name);			// Returns the values read for a single argument
+	std::vector<std::string> values(const std::string& name) const;			// Returns the values read for a single argument
 	/*! \brief Launches the sequence PreProcess, MainProcess and PostProcess.
 	* 
 	*	The overriden member function MainProcess is called for each file found regarding values of the argument named 'file'.
@@ -105,9 +105,6 @@ protected:
 private:
 	bool m_argschecked{ false };
 	bool m_windowsmode{ false };
-
-	std::unordered_map<std::string, std::vector<std::string>> m_values{};
-																		// stores values for each argument
 
 	int ByFile();														// Calls MainProcess for each file matching argument 'file' values and returns the number of files processed
 };
