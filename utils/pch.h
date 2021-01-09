@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cstdarg>
 #include <cstdio>
+#include <fstream>
 #include <regex>
 
 #ifdef _WIN32

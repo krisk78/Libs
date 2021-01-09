@@ -98,3 +98,15 @@ TEST(Dir_Test, Absolute_Path_Dir)
 // TODO dir with patterns containing []
 
 // TODO str_to_wstr tests
+
+TEST(EOL_Test, Windows_File)
+{
+	std::filesystem::path p("C:/temp/windows.txt");
+	EXPECT_EQ(file_EOL(p), EOL::Windows);
+}
+
+TEST(EOL_Test, Unix_File)
+{
+	std::filesystem::path p("C:/temp/unix.txt");
+	EXPECT_EQ(file_EOL(p), EOL::Unix);
+}

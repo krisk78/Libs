@@ -32,9 +32,9 @@ std::string ConsoleApp::Arguments(int argc, char* argv[])
 			std::cout << us;
 		return msg;				// m_argschecked is not set to true because in this case there is nothing to run
 	}
-	if (msg.empty())
+	if (msg.size() == 0)
 		msg = CheckArguments();
-	if (!msg.empty())
+	if (msg.size() != 0)
 	{
 #ifdef _WIN32
 		if (m_windowsmode)

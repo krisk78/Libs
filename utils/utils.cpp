@@ -105,3 +105,81 @@ std::vector<fs::path> dir(const std::string& pattern)
     }
     return result;
 }
+
+EOL find_EOL(const std::vector<char>& buf)
+{
+    auto itr = std::find(buf.rbegin(), buf.rend(), '\r');
+    if (itr != buf.rend())
+    {
+        if (itr != buf.rbegin())
+        {
+            itr--;
+            if (*itr == '\n')
+                return EOL::Windows;
+        }
+        return EOL::Mac;
+    }
+    itr = std::find(buf.rbegin(), buf.rend(), '\n');
+    if (itr != buf.rend())
+        return EOL::Unix;
+    return EOL::Unknown;
+}
+
+EOL file_EOL(const std::filesystem::path& filepath)
+{
+    const std::ios::off_type BUF_LENGTH{ 4096 };
+
+    if (!std::filesystem::exists(filepath))
+        return EOL::Unknown;
+    std::ifstream file(filepath, std::ios_base::binary | std::ios_base::in);
+    if (auto fop = file.is_open(); !fop)
+        return EOL::Unknown;
+    file.seekg(0, std::ios::end);
+    std::vector<char> buf(BUF_LENGTH);
+    auto pos = file.tellg();
+    if (pos > BUF_LENGTH)
+    {
+        pos = BUF_LENGTH;
+        file.seekg(-pos, std::ios::end);         // first search at end of file
+        file.read(buf.data(), pos);
+        auto ret = find_EOL(buf);
+        if (ret != EOL::Unknown)
+        {
+            file.close();
+            return ret;
+        }
+    }
+    file.seekg(std::ios::beg);                      // next search at begin of file
+    file.read(buf.data(), pos);
+    auto ret = find_EOL(buf);
+    file.close();
+    return ret;
+}
+
+size_t EOL_length(const EOL eol_type)
+{
+    switch (eol_type)
+    {
+        case EOL::Unknown:
+            return 0;
+        case EOL::Windows:
+            return 2;
+        default:
+            return 1;
+    }
+}
+
+std::string EOL_str(const EOL eol_type)
+{
+    switch (eol_type)
+    {
+        case EOL::Windows:
+            return "\n\r";
+        case EOL::Unix:
+            return "\n";
+        case EOL::Mac:
+            return "\r";
+        default:
+            return "";
+    }
+}
