@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <fstream>
 #include <regex>
+#include <sstream>
 
 #ifdef _WIN32
 #include <windows.h>

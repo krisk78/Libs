@@ -7,6 +7,7 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
+#include <algorithm>
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -63,3 +64,46 @@ size_t EOL_length(const EOL eol_type);
 
 /*! \brief Returns the chars sequence of the EOL type. */
 std::string EOL_str(const EOL eol_type);
+
+/*! \brief Deletes in place the spaces present at the left of the given string. */
+static inline void ltrim(std::string& s)
+{
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) { return !std::isspace(ch); }));
+}
+
+/*! \brief Deletes in place the spaces present at the right of the given string. */
+static inline void rtrim(std::string& s)
+{
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !std::isspace(ch); }).base(), s.end());
+}
+
+/*! \brief Deletes in place the spaces present at both left and right of the given string. */
+static inline void trim(std::string& s)
+{
+	ltrim(s);
+	rtrim(s);
+}
+
+/*! \brief Returns a string without left spaces. */
+static inline std::string ltrimc(std::string s)
+{
+	ltrim(s);
+	return s;
+}
+
+/*! \brief Returns a string without right spaces. */
+static inline std::string rtrimc(std::string s)
+{
+	rtrim(s);
+	return s;
+}
+
+/*! \brief Returns a string without both left and right spaces. */
+static inline std::string trimc(std::string s)
+{
+	trim(s);
+	return s;
+}
+
+/*! \brief Returns the list of elements of the given string delimited by the given char. */
+std::vector<std::string> split(const std::string& s, const char delim);

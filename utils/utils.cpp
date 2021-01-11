@@ -183,3 +183,13 @@ std::string EOL_str(const EOL eol_type)
             return "";
     }
 }
+
+std::vector<std::string> split(const std::string& s, const char delim)
+{
+    std::vector<std::string> result;
+    std::istringstream iss(s);
+    std::string item;
+    while (std::getline(iss, item, delim))
+        result.push_back(item);
+    return result;
+}
