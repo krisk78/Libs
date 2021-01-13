@@ -93,3 +93,16 @@ int ConsoleApp::ByFile()
 		throw std::filesystem::filesystem_error("No matching file.", std::make_error_code(std::errc::no_such_file_or_directory));
 	return nbfiles;
 }
+
+std::filesystem::path ConsoleApp::getOutPath(const std::filesystem::path& inpath)
+{
+	std::string outname{ inpath.generic_string() };
+	auto extarg = us.get_Argument("extension");
+	if (extarg == NULL || !Arguments_Checked())
+		return std::filesystem::path(outname);
+	auto ext = outname.find_last_of('.');
+	if (ext != std::string::npos)
+		outname.erase(ext, outname.size() - ext);
+	outname.append(extarg->value.front());
+	return std::filesystem::path(outname);
+}

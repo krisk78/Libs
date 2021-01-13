@@ -101,6 +101,14 @@ protected:
 	*	In example, closing the global files that were open by the function PreProcess.
 	*/
 	virtual void PostProcess() {};										// Launched after ByFile, do nothing by default
+	/*! \brief This function is provided as an help to create a path matching the input file name passed to MainProcess
+	*	and the extension argument if exists.
+	* 
+	*	It returns the name of the inPath file with the last extension replaced by the value of the extension argument.
+	*	\warning If the extension argument does not exist or the arguments were not checked before then the returned path
+	*	points to the same file as inPath.
+	*/
+	std::filesystem::path getOutPath(const std::filesystem::path & inPath);
 
 private:
 	bool m_argschecked{ false };
