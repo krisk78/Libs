@@ -145,7 +145,7 @@ public:
 	* 
 	*	In case of the return of the setFormats function is false, this function can be used to know which format is wrong.
 	*	The result is a bitwise OR of validity status of given argument.
-	*	\example isValid(BOTH) returns BOTH if both formats are valid, NONE if they are both wrong, FROM if only the from format is valid and TO if only the to format is valid.
+	*	In example, isValid(BOTH) returns BOTH if both formats are valid, NONE if they are both wrong, FROM if only the from format is valid and TO if only the to format is valid.
 	*/
 	unsigned char isValid(const unsigned char mode);
 	/*! \brief Return true if the given string is compliant with the from format string.
