@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cstdarg>
 #include <cstdio>
+#include <ctime>
 #include <fstream>
 #include <regex>
 #include <sstream>
