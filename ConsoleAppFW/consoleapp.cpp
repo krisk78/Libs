@@ -63,14 +63,15 @@ int ConsoleApp::Run()
 {
 	assert(m_argschecked && "Arguments must be parsed and checked first.");
 	int nbfiles{ 0 };
-	PreProcess();
-	try {
+	try
+	{
+		PreProcess();
 		nbfiles = ByFile();
+		PostProcess();
 	}
 	catch (const std::exception&) {
 		throw;
 	}
-	PostProcess();
 	return nbfiles;
 }
 
@@ -85,7 +86,10 @@ int ConsoleApp::ByFile()
 		auto files = dir(value);
 		for (auto file : files)
 		{
-			MainProcess(file);
+			try {
+				MainProcess(file); }
+			catch (...) {
+				throw; }
 			nbfiles++;
 		}
 	}
