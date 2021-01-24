@@ -83,8 +83,8 @@ int ConsoleApp::ByFile()
 		return nbfiles;
 	for (auto value : files->value)
 	{
-		auto files = dir(value);
-		for (auto file : files)
+		auto filelist = dir(value);
+		for (auto file : filelist)
 		{
 			try {
 				MainProcess(file); }
