@@ -174,7 +174,7 @@ std::string EOL_str(const EOL eol_type)
     switch (eol_type)
     {
         case EOL::Windows:
-            return "\n\r";
+            return "\r\n";
         case EOL::Unix:
             return "\n";
         case EOL::Mac:
