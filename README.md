@@ -24,3 +24,9 @@ Finally, the Utils library includes few functions to perform basic tasks that ar
 Version history:
 1.0-alpha
   First pre-release finalized to be used by the extsort application.
+
+1.1
+  Usage : few adjustments on access to arguments values.
+  Utils : adds EOL, trim, split and date functions with tests.
+  ConsoleAppFW : adds getOutPath member function, extends error catching, fixes ByFile member function.
+  Documentation : update and fixes.
