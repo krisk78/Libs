@@ -1,4 +1,14 @@
 # Libs
+
+## This repository is deprecated, replaced by these repositories:
+* [str-utils-static](https://github.com/krisk78/str-utils-static)
+* [date-utils-static](https://github.com/krisk78/date-utils-static)
+* [file-utils-static](https://github.com/krisk78/file-utils-static)
+* [requirements](https://github.com/krisk78/requirements)
+* [conflicts](https://github.com/krisk78/conflicts)
+* [usage-static](https://github.com/krisk78/usage-static)
+* [consoleapp-static](https://github.com/krisk78/consoleapp-static)
+
 Libraries project
 
 I created these libraries in order to develop few console applications on Windows platform.
